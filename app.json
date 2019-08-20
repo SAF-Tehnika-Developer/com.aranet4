@@ -1,0 +1,135 @@
+{
+  "id": "com.aranet4",
+  "version": "1.0.0",
+  "compatibility": ">=2.1.2",
+  "sdk": 2,
+  "brandColor": "#48cccf",
+  "name": {
+    "en": "Aranet4"
+  },
+  "aranet4homey_data": {
+    "data_service_uuid": "f0cd140095da4f4b9ac8aa55d312af0c",
+    "data_characteristic_uuid": "f0cd300195da4f4b9ac8aa55d312af0c",
+    "max_retries": "15",
+    "battery_alarm_trigger": "15",
+    "timeout": {
+      "regular": 10000,
+      "long": 600000
+    }
+  },
+  "description": {
+    "en": "Adds support for Aranet4 devices."
+  },
+  "tags": {
+		"en": [ "aranet", "aranet4", "sensor", "weather", "climate", "saf", "co2", "temperature", "humidity", "pressure", "air" ]
+	},
+  "category": [
+    "climate"
+  ],
+  "permissions": [
+    "homey:wireless:ble"
+  ],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "SAF Tehnika",
+    "email": "app@saftehnika.com"
+  },
+  "drivers": [
+    {
+      "id": "aranet4",
+      "name": {
+        "en": "Aranet4"
+      },
+      "pair": [
+        {
+          "id": "list_aranet_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_aranet_devices"
+          },
+          "options": {
+            "singular": false
+          }
+        },
+        {
+          "id": "add_aranet_devices",
+          "template": "add_devices"
+        }
+      ],
+      "class": "sensor",
+      "capabilities": [
+        "measure_battery",
+        "measure_co2",
+        "measure_humidity",
+        "measure_pressure",
+        "measure_temperature",
+        "alarm_battery"
+      ],
+      "images": {
+        "large": "/drivers/aranet4/assets/images/large.png",
+        "small": "/drivers/aranet4/assets/images/small.png"
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Notification settings"
+          },
+          "children": [
+            {
+              "id": "connection",
+              "type": "checkbox",
+              "value": true,
+              "label": {
+                "en": "Lost/restored connection notification"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device information"
+          },
+          "children": [
+            {
+              "id": "name",
+              "type": "label",
+              "label": {
+                "en": "Device name"
+              },
+              "value": ""
+            },
+            {
+              "id": "uuid",
+              "type": "label",
+              "label": {
+                "en": "Device uuid address"
+              },
+              "value": ""
+            },
+            {
+              "id": "added",
+              "type": "label",
+              "label": {
+                "en": "Device added on"
+              },
+              "value": ""
+            },
+            {
+              "id": "restarted",
+              "type": "label",
+              "label": {
+                "en": "Device last restarted on"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

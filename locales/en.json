@@ -1,0 +1,16 @@
+{
+    "notifications" : {
+        "app" : {
+            "no_connection" : "No connection to __device__",
+            "common_error" : "Make sure Homey integration is enabled and firmware is up to date for __device__ on Aranet4 mobile app",
+            "low_battery" : "__device__ batteries are low"
+        },
+        "device": {
+            "init" : "Initializing __device__, please wait for a moment"
+        },
+        "connection" : {
+            "lost" : "Connecion to __device__ has been lost",
+            "secured" : "Connection to __device__ has been reestablished"
+        }
+    }
+}
