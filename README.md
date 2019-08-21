@@ -2,7 +2,7 @@
 
 ## Introduction 
 
-![Aranet4](assets/images/aranet4homey.jpg)
+![Aranet4](https://raw.githubusercontent.com/SAF-Tehnika-Developer/com.aranet4/7088134f7607eb22f33380a44a33c9ec38274904/assets/images/aranet4homey.jpg)
 
 Homey Aranet4 app adds support for Aranet4 devices into Homey.
 
@@ -11,8 +11,8 @@ To make configuration changes to your Aranet4 device please download the Aranet4
 
 ##### Download the Aranet4 mobile app:
 
-[![](assets/images/androidstore.png)](https://play.google.com/store/apps/details?id=com.saf.aranetCube.android&hl=en)
-[![](assets/images/applestore.png)](https://apps.apple.com/lv/app/aranet4/id1392378465)
+[![](https://raw.githubusercontent.com/SAF-Tehnika-Developer/com.aranet4/7088134f7607eb22f33380a44a33c9ec38274904/assets/images/androidstore.png)](https://play.google.com/store/apps/details?id=com.saf.aranetCube.android&hl=en)
+[![](https://raw.githubusercontent.com/SAF-Tehnika-Developer/com.aranet4/7088134f7607eb22f33380a44a33c9ec38274904/assets/images/applestore.png)](https://apps.apple.com/lv/app/aranet4/id1392378465)
 
 ##### More info about Aranet4 on our website: 
 
