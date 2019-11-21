@@ -1,7 +1,7 @@
 {
   "id": "com.aranet4",
-  "version": "1.0.0",
-  "compatibility": ">=2.1.2",
+  "version": "1.1.0",
+  "compatibility": ">=3.0.0",
   "sdk": 2,
   "brandColor": "#48cccf",
   "name": {
@@ -68,6 +68,9 @@
         "measure_temperature",
         "alarm_battery"
       ],
+      "energy": {
+        "batteries": [ "AA", "AA" ]
+      },
       "images": {
         "large": "/drivers/aranet4/assets/images/large.png",
         "small": "/drivers/aranet4/assets/images/small.png"

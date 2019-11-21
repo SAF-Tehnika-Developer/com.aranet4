@@ -92,6 +92,10 @@ To use Aranet4 app with your Homey please follow these instructions:
 
 * First version of the app added to the store.
 
+### v1.1.0
+
+* Updated to support Homey v3.0.0 features
+
 ## Contacts 
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at: 
