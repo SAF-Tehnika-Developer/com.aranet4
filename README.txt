@@ -24,6 +24,10 @@ v1.1.0
 
   - Updated to support Homey v3.0.0 features
 
+v1.2.0
+
+  - Fixed app crashes and stability issues introduced after Homey version 7.4.1 update
+
 Contacts 
 
  - app@saftehnika.com

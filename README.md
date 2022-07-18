@@ -96,6 +96,10 @@ To use Aranet4 app with your Homey please follow these instructions:
 
 * Updated to support Homey v3.0.0 features
 
+### v1.2.0
+
+* Fixed app crashes and stability issues introduced after Homey version 7.4.1 update
+
 ## Contacts 
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at: 
