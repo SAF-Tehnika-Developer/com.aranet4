@@ -78,8 +78,7 @@ class Aranet4Homey extends Homey.App {
 	}
 	
 	async findDevice(device) {
-		return await Homey.ManagerBLE.discover([DATA_SERVICE_UUID], 5000).then(function (advertisements) {
-			let advertisement = advertisements.find(advertisement => advertisement.uuid == device.getData().uuid);
+			return await Homey.ManagerBLE.find(device.getData().uuid).then(function (advertisement) {
 			if (typeof advertisement === 'undefined'){
 				return null;
 			} else {
@@ -109,7 +108,7 @@ class Aranet4Homey extends Homey.App {
 				device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long;
 				device.retry = 0;
 				await device.setUnavailable(Homey.__("notifications.app.no_connection", { "device": name }));
-				console.log('Connection failed after ' + MAX_RETRIES + ' retries, next checkup set after ' + this.manifest.aranet4homey_data.timeout.long + ' ms');
+				console.log('Connection failed after ' + MAX_RETRIES + ' retries, next checkup set after ' + this.manifest.aranet4homey_data.timeout.long/1000 + ' s');
 				return device;
 			}
 
@@ -228,6 +227,9 @@ class Aranet4Homey extends Homey.App {
 				device.retry += 1;
 				await disconnectPeripheral();
 				console.log("Refresh error: " + err);
+				console.log("Start 10s BLE module error recovery timeout");
+				await new Promise(resolve => setTimeout(resolve, 10000));
+				console.log("End BLE module error recovery timeout");
 				return device;
 			}
 		}
@@ -248,12 +250,10 @@ class Aranet4Homey extends Homey.App {
 			return promise
 			.then(() => {
 				return this.updateDevice(device)
-				.catch((error) => {
-					console.log(error);
-				});
-			}).catch(error => {
+			})
+			.catch(error => {
 				console.log(error);
-			});
+			})
 		}, Promise.resolve());
 	}
 

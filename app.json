@@ -1,6 +1,6 @@
 {
   "id": "com.aranet4",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "brandColor": "#48cccf",
@@ -10,7 +10,7 @@
   "aranet4homey_data": {
     "data_service_uuid": "f0cd140095da4f4b9ac8aa55d312af0c",
     "data_characteristic_uuid": "f0cd300195da4f4b9ac8aa55d312af0c",
-    "max_retries": "15",
+    "max_retries": "10",
     "battery_alarm_trigger": "15",
     "timeout": {
       "regular": 10000,

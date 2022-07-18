@@ -71,7 +71,7 @@ class Aranet4Driver extends Homey.Driver {
     let checkInterval = Homey.app.manifest.aranet4homey_data.timeout.regular;
     if(this.allUnavailable){  
       checkInterval = Homey.app.manifest.aranet4homey_data.timeout.long;
-      console.log("No connection to any Aranet4 devices, checkup timeout set to " + checkInterval + " ms");
+      console.log("No connection to any Aranet4 devices, checkup timeout set to " + checkInterval/1000 + " s");
     }
     this.syncTimeout = setTimeout(this.synchroniseSensorData.bind(this), checkInterval);
   }
