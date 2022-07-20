@@ -1,0 +1,14 @@
+{
+  "1.0.0": {
+    "en": "First version of the app added to the store"
+  },
+  "1.1.0": {
+    "en": "Updated to support Homey v3.0.0 features"
+  },
+  "1.2.0": {
+    "en": "Fixed app crashes and stability issues introduced after Homey version 7.4.1 update"
+  },
+  "1.2.1": {
+    "en": "Fixed app crashes related to timeline notification settings"
+  }
+}
