@@ -28,6 +28,10 @@ v1.2.0
 
   - Fixed app crashes and stability issues introduced after Homey version 7.4.1 update
 
+v1.2.1
+
+  - Fixed app crashes related to timeline notification settings
+
 Contacts 
 
  - app@saftehnika.com

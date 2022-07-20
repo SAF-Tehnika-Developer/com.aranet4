@@ -102,7 +102,9 @@ class Aranet4Homey extends Homey.App {
 				if(device.getSettings().connection == true && device.lost_conn == false){
 					let text = Homey.__("notifications.connection.lost", { "device": name });
 					let connTimeout = new Homey.Notification({excerpt: text});
-					connTimeout.register();
+					connTimeout.register().catch(error => {
+						console.log('Lost connection notification not registered:' + error );
+					});
 				}
 				device.lost_conn = true;
 				device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long;
@@ -184,7 +186,9 @@ class Aranet4Homey extends Homey.App {
 					device.alarm_battery_triggered = true;
 					let text = Homey.__("notifications.app.low_battery", { "device": name });
 					let batteryNotification = new Homey.Notification({excerpt: text});
-					batteryNotification.register();
+					batteryNotification.register().catch(error => {
+						console.log('Low battery notification not registered:' + error );
+					});
 				}
 				else if(sensorValues.alarm_battery == false && device.alarm_battery_triggered == true && sensorValues.measure_battery >= this.manifest.aranet4homey_data.battery_alarm_trigger + 10){
 					device.alarm_battery_triggered = false;
@@ -213,7 +217,9 @@ class Aranet4Homey extends Homey.App {
 					if(device.getSettings().connection == true){
 						let text = Homey.__("notifications.connection.secured", { "device": name });
 						let connSecured = new Homey.Notification({excerpt: text});
-						connSecured.register();
+						connSecured.register().catch(error => {
+							console.log('Restored connection notification not registered:' + error );
+						});
 					}
 				}
 
