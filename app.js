@@ -16,7 +16,7 @@ class Aranet4Homey extends Homey.App {
 		let devices = [];
 		this.discoveringDevices = true
 		for (let i = 0; i < 5; i++) {
-			const advertisements = await Homey.ManagerBLE.discover([], 2000)
+			const advertisements = await Homey.ManagerBLE.discover([], 1000)
 			devices.push(advertisements)
 		}
 		this.discoveringDevices = false
