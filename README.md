@@ -104,6 +104,12 @@ To use Aranet4 app with your Homey please follow these instructions:
 
 * Fixed app crashes related to timeline notification settings
 
+### v1.3.0
+
+* Added new service UUID support
+* Improved new device discovery
+* Improved update loop consistency
+
 ## Contacts 
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at: 

@@ -32,6 +32,12 @@ v1.2.1
 
   - Fixed app crashes related to timeline notification settings
 
+v1.3.0
+
+  - Added new service UUID support
+  - Improved new device discovery
+  - Improved update loop consistency
+
 Contacts 
 
  - app@saftehnika.com

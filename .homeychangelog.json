@@ -10,5 +10,8 @@
   },
   "1.2.1": {
     "en": "Fixed app crashes related to timeline notification settings"
+  },
+  "1.3.0": {
+    "en": "Added new service UUID support. Improved new device discovery. Improved update loop consistency."
   }
 }
