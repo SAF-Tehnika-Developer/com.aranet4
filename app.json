@@ -1,6 +1,6 @@
 {
   "id": "com.aranet4",
-  "version": "1.3.0",
+  "version": "1.3.2",
   "compatibility": ">=3.0.0",
   "sdk": 2,
   "brandColor": "#48cccf",
@@ -8,7 +8,10 @@
     "en": "Aranet4"
   },
   "aranet4homey_data": {
-    "data_service_uuid": ["f0cd140095da4f4b9ac8aa55d312af0c","0000fce000001000800000805f9b34fb"],
+    "data_service_uuid": [
+      "f0cd140095da4f4b9ac8aa55d312af0c",
+      "0000fce000001000800000805f9b34fb"
+    ],
     "data_characteristic_uuid": "f0cd300195da4f4b9ac8aa55d312af0c",
     "max_retries": "10",
     "battery_alarm_trigger": "15",
@@ -18,11 +21,23 @@
     }
   },
   "description": {
-    "en": "Adds support for Aranet4 devices."
+    "en": "An innovative indoor air quality monitor that measures CO₂ level, temperature, relative humidity, and atmospheric pressure."
   },
   "tags": {
-		"en": [ "aranet", "aranet4", "sensor", "weather", "climate", "saf", "co2", "temperature", "humidity", "pressure", "air" ]
-	},
+    "en": [
+      "aranet",
+      "aranet4",
+      "sensor",
+      "weather",
+      "climate",
+      "saf",
+      "co2",
+      "temperature",
+      "humidity",
+      "pressure",
+      "air"
+    ]
+  },
   "category": [
     "climate"
   ],
@@ -37,6 +52,8 @@
     "name": "SAF Tehnika",
     "email": "app@saftehnika.com"
   },
+  "homepage": "https://aranet4.com/",
+  "support": "mailto:app@saftehnika.com",
   "drivers": [
     {
       "id": "aranet4",
@@ -69,7 +86,10 @@
         "alarm_battery"
       ],
       "energy": {
-        "batteries": [ "AA", "AA" ]
+        "batteries": [
+          "AA",
+          "AA"
+        ]
       },
       "images": {
         "large": "/drivers/aranet4/assets/images/large.png",

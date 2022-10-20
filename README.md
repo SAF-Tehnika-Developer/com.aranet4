@@ -110,6 +110,14 @@ To use Aranet4 app with your Homey please follow these instructions:
 * Improved new device discovery
 * Improved update loop consistency
 
+### v1.3.1
+
+* Changed timeout for better discover consistency
+
+### v1.3.2
+
+* Updated app manifest
+
 ## Contacts 
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at: 
