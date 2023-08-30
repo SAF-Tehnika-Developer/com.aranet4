@@ -18,7 +18,7 @@ class Aranet4Device extends Homey.Device {
         ':' +
         ('0' + added.getMinutes()).slice(-2),
     })
-    let driver = this.getDriver()
+    let driver = this.homey.drivers.getDriver('aranet4')
     driver.synchroniseSensorData()
     console.log('Restarting Aranet4 synchronization sequence............')
   }
@@ -28,7 +28,7 @@ class Aranet4Device extends Homey.Device {
   }
 
   onInit() {
-    this.setUnavailable(Homey.__('notifications.device.init', { device: this.getData().name }))
+    this.setUnavailable(this.homey.__('notifications.device.init', { device: this.getData().name }))
     this.alarm_battery_triggered = false
     this.lost_conn = false
     this.retry = 0

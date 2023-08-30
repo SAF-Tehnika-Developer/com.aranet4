@@ -9,17 +9,18 @@ class Aranet4Driver extends Homey.Driver {
     setTimeout(() => this.synchroniseSensorData(), 1000)
   }
 
-  onPairListDevices(data, callback) {
+  onPairListDevices() {
     console.log('\nDiscovering new devices................................')
-    Homey.app
+
+    return this.homey.app
       .discoverDevices()
       .then(devices => {
         console.log('Devices found: ', devices)
-        callback(null, devices)
+        return devices
       })
       .catch(error => {
         console.log('Cannot get devices: ' + error)
-        callback(null, [])
+        return []
       })
   }
 
@@ -34,7 +35,7 @@ class Aranet4Driver extends Homey.Driver {
 
         if (devices.length > 0) {
           console.log('\n-----------------Init all device update----------------')
-          Homey.app
+          this.homey.app
             .updateDevices(devices)
             .then(() => {
               devices.forEach(device => {
@@ -67,9 +68,9 @@ class Aranet4Driver extends Homey.Driver {
   }
 
   setNewTimeout() {
-    let checkInterval = Homey.app.manifest.aranet4homey_data.timeout.regular
+    let checkInterval = this.homey.app.manifest.aranet4homey_data.timeout.regular
     if (this.allUnavailable) {
-      checkInterval = Homey.app.manifest.aranet4homey_data.timeout.long
+      checkInterval = this.homey.app.manifest.aranet4homey_data.timeout.long
       console.log('No connection to any Aranet4 devices, checkup timeout set to ' + checkInterval / 1000 + ' s')
     }
     this.syncTimeout = setTimeout(this.synchroniseSensorData.bind(this), checkInterval)
