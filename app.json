@@ -2,7 +2,7 @@
   "id": "com.aranet4",
   "version": "1.3.2",
   "compatibility": ">=5.0.0",
-  "sdk": 2,
+  "sdk": 3,
   "brandColor": "#48cccf",
   "name": {
     "en": "Aranet4"

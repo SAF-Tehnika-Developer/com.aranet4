@@ -28,7 +28,7 @@ class Aranet4Device extends Homey.Device {
   }
 
   onInit() {
-    this.setUnavailable(Homey.__('notifications.device.init', { device: this.getData().name }))
+    this.setUnavailable(this.homey.__('notifications.device.init', { device: this.getData().name }))
     this.alarm_battery_triggered = false
     this.lost_conn = false
     this.retry = 0

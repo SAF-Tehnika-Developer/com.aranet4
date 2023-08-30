@@ -15,7 +15,7 @@ class Aranet4Homey extends Homey.App {
     let devices = []
     this.discoveringDevices = true
     for (let i = 0; i < 5; i++) {
-      const advertisements = await Homey.ManagerBLE.discover([], 1000)
+      const advertisements = await this.homey.ble.discover([], 1000)
       devices.push(advertisements)
     }
     this.discoveringDevices = false
@@ -41,7 +41,7 @@ class Aranet4Homey extends Homey.App {
   }
 
   async findDevice(device) {
-    return await Homey.ManagerBLE.find(device.getData().uuid).then(function (advertisement) {
+    return await this.homey.ble.find(device.getData().uuid).then(function (advertisement) {
       if (typeof advertisement === 'undefined') {
         return null
       } else {
@@ -62,11 +62,10 @@ class Aranet4Homey extends Homey.App {
     if (timenow >= device.nextcheckuptime) {
       if (device.retry >= MAX_RETRIES) {
         if (device.getSettings().connection == true && device.lost_conn == false) {
-          let text = Homey.__('notifications.connection.lost', {
+          let text = this.homey.__('notifications.connection.lost', {
             device: name,
           })
-          let connTimeout = new Homey.Notification({ excerpt: text })
-          connTimeout.register().catch(error => {
+          this.homey.notifications.createNotification({ excerpt: text }).catch(error => {
             console.log('Lost connection notification not registered:' + error)
           })
         }
@@ -74,7 +73,7 @@ class Aranet4Homey extends Homey.App {
         device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
         device.retry = 0
         await device.setUnavailable(
-          Homey.__('notifications.app.no_connection', {
+          this.homey.__('notifications.app.no_connection', {
             device: name,
           }),
         )
@@ -132,7 +131,7 @@ class Aranet4Homey extends Homey.App {
           device.retry = 0
           device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
           await device.setUnavailable(
-            Homey.__('notifications.app.common_error', {
+            this.homey.__('notifications.app.common_error', {
               device: name,
             }),
           )
@@ -148,7 +147,7 @@ class Aranet4Homey extends Homey.App {
           device.retry = 0
           device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
           await device.setUnavailable(
-            Homey.__('notifications.app.common_error', {
+            this.homey.__('notifications.app.common_error', {
               device: name,
             }),
           )
@@ -163,7 +162,7 @@ class Aranet4Homey extends Homey.App {
           device.retry = 0
           device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
           await device.setUnavailable(
-            Homey.__('notifications.app.common_error', {
+            this.homey.__('notifications.app.common_error', {
               device: name,
             }),
           )
@@ -183,13 +182,10 @@ class Aranet4Homey extends Homey.App {
 
         if (sensorValues.alarm_battery == true && device.alarm_battery_triggered == false) {
           device.alarm_battery_triggered = true
-          let text = Homey.__('notifications.app.low_battery', {
+          let text = this.homey.__('notifications.app.low_battery', {
             device: name,
           })
-          let batteryNotification = new Homey.Notification({
-            excerpt: text,
-          })
-          batteryNotification.register().catch(error => {
+          this.homey.notifications.createNotification({ excerpt: text }).catch(error => {
             console.log('Low battery notification not registered:' + error)
           })
         } else if (
@@ -221,13 +217,10 @@ class Aranet4Homey extends Homey.App {
         if (device.lost_conn == true) {
           device.lost_conn = false
           if (device.getSettings().connection == true) {
-            let text = Homey.__('notifications.connection.secured', {
+            let text = this.homey.__('notifications.connection.secured', {
               device: name,
             })
-            let connSecured = new Homey.Notification({
-              excerpt: text,
-            })
-            connSecured.register().catch(error => {
+            this.homey.notifications.createNotification({ excerpt: text }).catch(error => {
               console.log('Restored connection notification not registered:' + error)
             })
           }

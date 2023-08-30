@@ -1,6 +1,7 @@
 'use strict'
 
 const Homey = require('homey')
+const DeviceApi = require('device-api')
 
 class Aranet4Driver extends Homey.Driver {
   onInit() {
@@ -9,17 +10,16 @@ class Aranet4Driver extends Homey.Driver {
     setTimeout(() => this.synchroniseSensorData(), 1000)
   }
 
-  onPairListDevices(data, callback) {
+  onPairListDevices() {
     console.log('\nDiscovering new devices................................')
-    Homey.app
-      .discoverDevices()
+    return DeviceApi.discoverDevices()
       .then(devices => {
         console.log('Devices found: ', devices)
-        callback(null, devices)
+        return devices
       })
       .catch(error => {
         console.log('Cannot get devices: ' + error)
-        callback(null, [])
+        return []
       })
   }
 
@@ -34,8 +34,7 @@ class Aranet4Driver extends Homey.Driver {
 
         if (devices.length > 0) {
           console.log('\n-----------------Init all device update----------------')
-          Homey.app
-            .updateDevices(devices)
+          DeviceApi.updateDevices(devices)
             .then(() => {
               devices.forEach(device => {
                 if (device.getAvailable() || device.retry != 0) {
