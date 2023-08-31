@@ -18,7 +18,7 @@ class Aranet4Device extends Homey.Device {
         ':' +
         ('0' + added.getMinutes()).slice(-2),
     })
-    let driver = this.getDriver()
+    let driver = this.homey.drivers.getDriver('aranet4')
     driver.synchroniseSensorData()
     console.log('Restarting Aranet4 synchronization sequence............')
   }
