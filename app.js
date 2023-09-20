@@ -55,10 +55,6 @@ class Aranet4Homey extends Homey.App {
     let timenow = new Date().getTime()
     console.log('\nAttempting to refresh ' + name)
 
-    let disconnectPeripheral = async () => {
-      console.log('disconnectPeripheral not registered yet')
-    }
-
     if (timenow >= device.nextcheckuptime) {
       if (device.retry >= MAX_RETRIES) {
         if (device.getSettings().connection == true && device.lost_conn == false) {
@@ -110,74 +106,41 @@ class Aranet4Homey extends Homey.App {
           return device
         }
 
-        console.log('Attemtping to connect: ' + name)
-        device.peripheral = await advertisement.connect()
+        const manufacturerData = advertisement.manufacturerData
+        const advertisedData = {}
 
-        disconnectPeripheral = async () => {
-          try {
-            console.log('Attempting to disconnect ' + name + ' peripheral')
-            if (device.peripheral.isConnected) {
-              return await device.peripheral.disconnect()
-            }
-          } catch (err) {
-            console.log('Error disconnecting peripheral for ' + name + ': ' + err)
-          }
+        if (name.includes('Aranet2')) {
+          advertisedData['temp'] = manufacturerData.readUInt16LE(12) / 20
+          advertisedData['humidity'] = manufacturerData.readUInt16LE(16) / 10
+          advertisedData['battery'] = manufacturerData.readUInt8(19)
+          advertisedData['interval'] = manufacturerData.readUInt16LE(21)
+          advertisedData['passed'] = manufacturerData.readUInt16LE(23)
+        } else {
+          const offset = -5
+          advertisedData['co2'] = manufacturerData.readUInt16LE(15 + offset)
+          advertisedData['temp'] = manufacturerData.readUInt16LE(17 + offset) / 20
+          advertisedData['pressure'] = manufacturerData.readUInt16LE(19 + offset) / 10
+          advertisedData['humidity'] = manufacturerData.readUInt8(21 + offset)
+          advertisedData['battery'] = manufacturerData.readUInt8(22 + offset)
+          advertisedData['interval'] = manufacturerData.readUInt16LE(24 + offset)
+          advertisedData['passed'] = manufacturerData.readUInt16LE(26 + offset)
         }
-
-        let services = await device.peripheral.discoverServices()
-
-        let service = await services.find(service => DATA_SERVICE_UUIDS.includes(service.uuid))
-        if (!service) {
-          device.retry = 0
-          device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
-          await device.setUnavailable(
-            this.homey.__('notifications.app.common_error', {
-              device: name,
-            }),
-          )
-          console.log('Missing data service: ' + name)
-          await disconnectPeripheral()
-          return device
-        }
-        let characteristics = await service.discoverCharacteristics()
-
-        console.log('Getting sensor data: ' + name)
-        let data = await characteristics.find(characteristic => characteristic.uuid === DATA_CHARACTERISTIC_UUID)
-        if (!data) {
-          device.retry = 0
-          device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
-          await device.setUnavailable(
-            this.homey.__('notifications.app.common_error', {
-              device: name,
-            }),
-          )
-          console.log('Missing data characteristic')
-          await disconnectPeripheral()
-          return device
-        }
-        let sensorData = await data.read()
-        console.log('Sensor data: ', sensorData)
-
-        if (!sensorData.length) {
-          device.retry = 0
-          device.nextcheckuptime = timenow + this.manifest.aranet4homey_data.timeout.long
-          await device.setUnavailable(
-            this.homey.__('notifications.app.common_error', {
-              device: name,
-            }),
-          )
-          console.log('Refresh canceled for ' + name + ': Homey integration is disabled or calibration in progress')
-          await disconnectPeripheral()
-          return device
-        }
+        console.log(
+          'Attemtping to parse manufacturerData: ' + name,
+          manufacturerData,
+          // '\n',
+          // [...manufacturerData],
+          // '\n=====',
+          advertisedData,
+        )
 
         let sensorValues = {
-          measure_co2: sensorData.readUInt16LE(0),
-          measure_temperature: sensorData.readUInt16LE(2) / 20,
-          measure_pressure: sensorData.readUInt16LE(4) / 10,
-          measure_humidity: sensorData.readUInt8(6),
-          measure_battery: sensorData.readUInt8(7),
-          alarm_battery: sensorData.readUInt8(7) < this.manifest.aranet4homey_data.battery_alarm_trigger,
+          measure_co2: advertisedData['co2'] ?? -1,
+          measure_temperature: advertisedData['temp'],
+          measure_pressure: advertisedData['pressure'] ?? -1,
+          measure_humidity: advertisedData['humidity'],
+          measure_battery: advertisedData['battery'],
+          alarm_battery: advertisedData['battery'] < this.manifest.aranet4homey_data.battery_alarm_trigger,
         }
 
         if (sensorValues.alarm_battery == true && device.alarm_battery_triggered == false) {
@@ -196,8 +159,8 @@ class Aranet4Homey extends Homey.App {
           device.alarm_battery_triggered = false
         }
 
-        let interval = sensorData.readUInt16LE(9)
-        let passed = sensorData.readUInt16LE(11)
+        let interval = advertisedData['interval']
+        let passed = advertisedData['passed']
         if (interval > passed) {
           let remaining = 10 + interval - passed
           device.nextcheckuptime = new Date().getTime() + remaining * 1000
@@ -210,9 +173,6 @@ class Aranet4Homey extends Homey.App {
           }
         }
         console.log('Updated sensor data: \n', sensorValues)
-
-        await disconnectPeripheral()
-        console.log('Disconnected ' + name + ' peripheral')
 
         if (device.lost_conn == true) {
           device.lost_conn = false
@@ -233,7 +193,6 @@ class Aranet4Homey extends Homey.App {
         return device
       } catch (err) {
         device.retry += 1
-        await disconnectPeripheral()
         console.log('Refresh error: ' + err)
         console.log('Start 10s BLE module error recovery timeout')
         await new Promise(resolve => setTimeout(resolve, 10000))
