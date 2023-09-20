@@ -11,7 +11,7 @@ class Aranet4Homey extends Homey.App {
     console.log('\nAranet4Homey is running................................')
   }
 
-  async discoverDevices() {
+  async discoverDevices(aranet2) {
     let devices = []
     this.discoveringDevices = true
     for (let i = 0; i < 5; i++) {
@@ -24,7 +24,8 @@ class Aranet4Homey extends Homey.App {
       .filter(
         advertisement =>
           advertisement.localName !== undefined &&
-          DATA_SERVICE_UUIDS.some(uuid => advertisement.serviceUuids.includes(uuid)),
+          DATA_SERVICE_UUIDS.some(uuid => advertisement.serviceUuids.includes(uuid)) &&
+          advertisement.localName.includes('Aranet2') === aranet2,
       )
       .map(function (advertisement) {
         return {

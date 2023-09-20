@@ -13,7 +13,7 @@ class Aranet4Driver extends Homey.Driver {
     console.log('\nDiscovering new devices................................')
 
     return this.homey.app
-      .discoverDevices()
+      .discoverDevices(false)
       .then(devices => {
         console.log('Devices found: ', devices)
         return devices
