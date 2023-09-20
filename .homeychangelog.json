@@ -22,5 +22,8 @@
   },
   "1.3.3": {
     "en": "Added support for Homey Pro (Early 2023)"
+  },
+  "1.3.4": {
+    "en": "Added Aranet2 support"
   }
 }

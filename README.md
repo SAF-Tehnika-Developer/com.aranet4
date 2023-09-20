@@ -123,6 +123,10 @@ To use Aranet4 app with your Homey please follow these instructions:
 
 - Migrated to SDK v3
 
+### v1.3.4
+
+- Added Aranet2 support
+
 ## Contacts
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at:
