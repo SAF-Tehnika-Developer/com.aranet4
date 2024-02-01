@@ -5,7 +5,7 @@
   "sdk": 3,
   "brandColor": "#48cccf",
   "name": {
-    "en": "Aranet4"
+    "en": "Aranet"
   },
   "aranet4homey_data": {
     "data_service_uuid": ["f0cd140095da4f4b9ac8aa55d312af0c", "0000fce000001000800000805f9b34fb"],
@@ -32,6 +32,7 @@
       "temperature",
       "humidity",
       "pressure",
+      "radiation",
       "air"
     ]
   },
@@ -45,6 +46,6 @@
     "name": "SAF Tehnika",
     "email": "app@saftehnika.com"
   },
-  "homepage": "https://aranet4.com/",
+  "homepage": "https://aranet.com/",
   "support": "mailto:app@saftehnika.com"
 }

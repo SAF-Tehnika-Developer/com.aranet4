@@ -1,0 +1,12 @@
+{
+  "type": "number",
+  "title": { "en": "Dose rate" },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "units": { "en": "μSv/h" },
+  "min": 0,
+  "step": 0.01,
+  "icon": "/assets/dose_rate.svg"
+}

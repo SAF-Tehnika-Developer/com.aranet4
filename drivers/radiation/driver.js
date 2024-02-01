@@ -2,10 +2,10 @@
 
 const Homey = require('homey')
 
-class Aranet2Driver extends Homey.Driver {
+class RadiationDriver extends Homey.Driver {
   onInit() {
-    console.log('Aranet2Driver initialised..............................')
-    console.log('Starting Aranet2 synchronization sequence..............')
+    console.log('RadiationDriver initialised..............................')
+    console.log('Starting Aranet Radiation synchronization sequence..............')
     setTimeout(() => this.synchroniseSensorData(), 1000)
   }
 
@@ -13,7 +13,7 @@ class Aranet2Driver extends Homey.Driver {
     console.log('\nDiscovering new devices................................')
 
     return this.homey.app
-      .discoverDevices('Aranet2')
+      .discoverDevices('\u2622') // ☢
       .then(devices => {
         console.log('Devices found: ', devices)
         return devices
@@ -52,7 +52,7 @@ class Aranet2Driver extends Homey.Driver {
               console.log('Error updating devices: ', error)
             })
         } else {
-          console.log('No devices to synchronize, Aranet2 synchronization sequence stopped')
+          console.log('No devices to synchronize, Aranet Radiation synchronization sequence stopped')
         }
       } catch (error) {
         this.setNewTimeout()
@@ -71,10 +71,12 @@ class Aranet2Driver extends Homey.Driver {
     let checkInterval = this.homey.app.manifest.aranet4homey_data.timeout.regular
     if (this.allUnavailable) {
       checkInterval = this.homey.app.manifest.aranet4homey_data.timeout.long
-      console.log('No connection to any Aranet2 devices, checkup timeout set to ' + checkInterval / 1000 + ' s')
+      console.log(
+        'No connection to any Aranet Radiation devices, checkup timeout set to ' + checkInterval / 1000 + ' s',
+      )
     }
     this.syncTimeout = setTimeout(this.synchroniseSensorData.bind(this), checkInterval)
   }
 }
 
-module.exports = Aranet2Driver
+module.exports = RadiationDriver

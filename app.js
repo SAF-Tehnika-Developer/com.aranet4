@@ -6,12 +6,17 @@ const DATA_SERVICE_UUIDS = Homey.manifest.aranet4homey_data.data_service_uuid
 const DATA_CHARACTERISTIC_UUID = Homey.manifest.aranet4homey_data.data_characteristic_uuid
 const MAX_RETRIES = Homey.manifest.aranet4homey_data.max_retries
 
+/*/ 
+  expects least significant bytes first: [1,0,0] => 1
+/*/
+const intFromBytes = (...bytes) => bytes.reduce((result, byte, i) => result + byte * 2 ** (i * 8), 0)
+
 class Aranet4Homey extends Homey.App {
   onInit() {
     console.log('\nAranet4Homey is running................................')
   }
 
-  async discoverDevices(aranet2) {
+  async discoverDevices(requiredNamePart) {
     let devices = []
     this.discoveringDevices = true
     for (let i = 0; i < 5; i++) {
@@ -25,7 +30,7 @@ class Aranet4Homey extends Homey.App {
         advertisement =>
           advertisement.localName !== undefined &&
           DATA_SERVICE_UUIDS.some(uuid => advertisement.serviceUuids.includes(uuid)) &&
-          advertisement.localName.includes('Aranet2') === aranet2,
+          advertisement.localName.includes(requiredNamePart),
       )
       .map(function (advertisement) {
         return {
@@ -108,41 +113,54 @@ class Aranet4Homey extends Homey.App {
         }
 
         const manufacturerData = advertisement.manufacturerData
-        const advertisedData = {}
+        const sensorValues = {}
 
-        if (name.includes('Aranet2')) {
-          advertisedData['temp'] = manufacturerData.readUInt16LE(12) / 20
-          advertisedData['humidity'] = manufacturerData.readUInt16LE(16) / 10
-          advertisedData['battery'] = manufacturerData.readUInt8(19)
-          advertisedData['interval'] = manufacturerData.readUInt16LE(21)
-          advertisedData['passed'] = manufacturerData.readUInt16LE(23)
-        } else {
+        let interval, passed
+
+        if (manufacturerData.length < 24) {
+          return this.homey.notifications.createNotification({ excerpt: 'bad data received' })
+        }
+
+        if (name.includes('Aranet4')) {
           const offset = -5
-          advertisedData['co2'] = manufacturerData.readUInt16LE(15 + offset)
-          advertisedData['temp'] = manufacturerData.readUInt16LE(17 + offset) / 20
-          advertisedData['pressure'] = manufacturerData.readUInt16LE(19 + offset) / 10
-          advertisedData['humidity'] = manufacturerData.readUInt8(21 + offset)
-          advertisedData['battery'] = manufacturerData.readUInt8(22 + offset)
-          advertisedData['interval'] = manufacturerData.readUInt16LE(24 + offset)
-          advertisedData['passed'] = manufacturerData.readUInt16LE(26 + offset)
-        }
-        console.log(
-          'Attemtping to parse manufacturerData: ' + name,
-          manufacturerData,
-          // '\n',
-          // [...manufacturerData],
-          // '\n=====',
-          advertisedData,
-        )
+          sensorValues.measure_co2 = manufacturerData.readUInt16LE(15 + offset)
+          sensorValues.measure_temperature = manufacturerData.readUInt16LE(17 + offset) / 20
+          sensorValues.measure_pressure = manufacturerData.readUInt16LE(19 + offset) / 10
+          sensorValues.measure_humidity = manufacturerData.readUInt8(21 + offset)
+          sensorValues.measure_battery = manufacturerData.readUInt8(22 + offset)
+          interval = manufacturerData.readUInt16LE(24 + offset)
+          passed = manufacturerData.readUInt16LE(26 + offset)
+        } else {
+          // [2, 7, 2, 33, 23, 4, 1, 0]
+          // [2, 7, 2,  1, 23, 4, 1, 0]
+          // Aranet☢ 03A76 [2, 1, 6, 9, 255, 2, 7, 2, 33, 23, 4, 1, 0, 3, 2, 224, 252, 16, 9, 65, 114, 97, 110, 101, 116, 226, 152, 162, 32, 48, 51, 65, 55, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          // Aranet☢ 03A76 [2, 1, 6, 9, 255, 2, 7, 2,  1, 23, 4, 1, 0, 3, 2, 224, 252, 16, 9, 65, 114, 97, 110, 101, 116, 226, 152, 162, 32, 48, 51, 65, 55, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          // Aranet☢ 03A76 [2, 1, 6, 9, 255, 2, 7, 2, 1, 23, 4, 1, 0, 3, 2, 224, 252, 16, 9, 65, 114, 97, 110, 101, 116, 226, 152, 162, 32, 48, 51, 65, 55, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        let sensorValues = {
-          measure_co2: advertisedData['co2'] ?? -1,
-          measure_temperature: advertisedData['temp'],
-          measure_pressure: advertisedData['pressure'] ?? -1,
-          measure_humidity: advertisedData['humidity'],
-          measure_battery: advertisedData['battery'],
-          alarm_battery: advertisedData['battery'] < this.manifest.aranet4homey_data.battery_alarm_trigger,
+          if (name.includes('\u2622')) {
+            // ☢
+            const bytes = [...manufacturerData]
+
+            sensorValues.measure_radiation_total_dose = manufacturerData.readUInt32LE(8) * 1e-6 //intFromBytes(...bytes.slice(8, 12)) * 1e-6 // 0.016
+            const seconds = manufacturerData.readUInt32LE(12) //intFromBytes(...bytes.slice(12, 16)) //594000
+            const days = Math.floor(seconds / (3600 * 24))
+            const hours = Math.floor((seconds % (3600 * 24)) / 3600)
+            const minutes = Math.floor((seconds % 3600) / 60)
+            const time = days === 0 ? `${hours}h ${minutes}m` : `${days}d ${hours}h`
+
+            sensorValues.measure_radiation_dose_rate = intFromBytes(...bytes.slice(16, 19)) * 1e-3 // 0.13
+
+            device.setCapabilityOptions('measure_radiation_total_dose', { title: { en: time } })
+          } else {
+            sensorValues.measure_temperature = manufacturerData.readUInt16LE(12) / 20
+            sensorValues.measure_humidity = manufacturerData.readUInt16LE(16) / 10
+          }
+          sensorValues.measure_battery = manufacturerData.readUInt8(19)
+          interval = manufacturerData.readUInt16LE(21)
+          passed = manufacturerData.readUInt16LE(23)
         }
+
+        sensorValues.alarm_battery = sensorValues.battery < this.manifest.aranet4homey_data.battery_alarm_trigger
 
         if (sensorValues.alarm_battery == true && device.alarm_battery_triggered == false) {
           device.alarm_battery_triggered = true
@@ -160,8 +178,6 @@ class Aranet4Homey extends Homey.App {
           device.alarm_battery_triggered = false
         }
 
-        let interval = advertisedData['interval']
-        let passed = advertisedData['passed']
         if (interval > passed) {
           let remaining = 10 + interval - passed
           device.nextcheckuptime = new Date().getTime() + remaining * 1000

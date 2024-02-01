@@ -6,7 +6,7 @@
   "sdk": 3,
   "brandColor": "#48cccf",
   "name": {
-    "en": "Aranet4"
+    "en": "Aranet"
   },
   "aranet4homey_data": {
     "data_service_uuid": [
@@ -36,6 +36,7 @@
       "temperature",
       "humidity",
       "pressure",
+      "radiation",
       "air"
     ]
   },
@@ -53,7 +54,7 @@
     "name": "SAF Tehnika",
     "email": "app@saftehnika.com"
   },
-  "homepage": "https://aranet4.com/",
+  "homepage": "https://aranet.com/",
   "support": "mailto:app@saftehnika.com",
   "drivers": [
     {
@@ -251,6 +252,137 @@
         }
       ],
       "id": "aranet4"
+    },
+    {
+      "name": {
+        "en": "Aranet ☢"
+      },
+      "pair": [
+        {
+          "id": "list_aranet_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_aranet_devices"
+          },
+          "options": {
+            "singular": false
+          }
+        },
+        {
+          "id": "add_aranet_devices",
+          "template": "add_devices"
+        }
+      ],
+      "class": "sensor",
+      "capabilities": [
+        "measure_battery",
+        "alarm_battery",
+        "measure_radiation_dose_rate",
+        "measure_radiation_total_dose"
+      ],
+      "energy": {
+        "batteries": [
+          "AA",
+          "AA"
+        ]
+      },
+      "images": {
+        "large": "/drivers/radiation/assets/images/large.png",
+        "small": "/drivers/radiation/assets/images/small.png"
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Notification settings"
+          },
+          "children": [
+            {
+              "id": "connection",
+              "type": "checkbox",
+              "value": true,
+              "label": {
+                "en": "Lost/restored connection notification"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device information"
+          },
+          "children": [
+            {
+              "id": "name",
+              "type": "label",
+              "label": {
+                "en": "Device name"
+              },
+              "value": ""
+            },
+            {
+              "id": "uuid",
+              "type": "label",
+              "label": {
+                "en": "Device uuid address"
+              },
+              "value": ""
+            },
+            {
+              "id": "added",
+              "type": "label",
+              "label": {
+                "en": "Device added on"
+              },
+              "value": ""
+            },
+            {
+              "id": "restarted",
+              "type": "label",
+              "label": {
+                "en": "Device last restarted on"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ],
+      "id": "radiation"
     }
-  ]
+  ],
+  "capabilities": {
+    "measure_radiation_dose_rate": {
+      "type": "number",
+      "title": {
+        "en": "Dose rate"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "units": {
+        "en": "μSv/h"
+      },
+      "min": 0,
+      "step": 0.01,
+      "icon": "/assets/dose_rate.svg"
+    },
+    "measure_radiation_total_dose": {
+      "type": "number",
+      "title": {
+        "en": "Total dose"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "units": {
+        "en": "mSv"
+      },
+      "min": 0,
+      "step": 0.001,
+      "icon": "/assets/total_dose.svg"
+    }
+  }
 }

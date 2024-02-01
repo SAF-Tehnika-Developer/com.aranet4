@@ -1,0 +1,12 @@
+{
+  "type": "number",
+  "title": { "en": "Total dose" },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "units": { "en": "mSv" },
+  "min": 0,
+  "step": 0.001,
+  "icon": "/assets/total_dose.svg"
+}
