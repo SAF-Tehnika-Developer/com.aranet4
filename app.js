@@ -17,33 +17,36 @@ class Aranet4Homey extends Homey.App {
   }
 
   async discoverDevices(requiredNamePart) {
-    let devices = []
+    const devices = {}
     this.discoveringDevices = true
-    for (let i = 0; i < 5; i++) {
-      const advertisements = await this.homey.ble.discover([], 1000)
-      devices.push(advertisements)
+    for (let i = 0; i < 1; i++) {
+      const advertisements = await this.homey.ble.discover([], 1000).catch(e => {
+        console.log(e)
+        return []
+      })
+
+      advertisements
+        .filter(
+          advertisement =>
+            advertisement.localName !== undefined &&
+            advertisement.localName.includes(requiredNamePart) &&
+            DATA_SERVICE_UUIDS.some(uuid => advertisement.serviceUuids.includes(uuid)),
+        )
+        .forEach(advertisement => (devices[advertisement.id] = advertisement))
     }
     this.discoveringDevices = false
-    devices = devices
-      .flat()
-      .filter(
-        advertisement =>
-          advertisement.localName !== undefined &&
-          DATA_SERVICE_UUIDS.some(uuid => advertisement.serviceUuids.includes(uuid)) &&
-          advertisement.localName.includes(requiredNamePart),
-      )
-      .map(function (advertisement) {
-        return {
-          name: advertisement.localName,
-          data: {
-            id: advertisement.id,
-            uuid: advertisement.uuid,
-            address: advertisement.uuid,
-            name: advertisement.localName,
-          },
-        }
-      })
-    return [...new Map(devices.map(item => [item['name'], item])).values()]
+
+    return Object.values(devices).map(function ({ localName: name, id, uuid }) {
+      return {
+        name,
+        data: {
+          id,
+          name,
+          uuid,
+          address: uuid,
+        },
+      }
+    })
   }
 
   async findDevice(device) {
