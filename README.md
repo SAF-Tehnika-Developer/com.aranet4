@@ -127,6 +127,10 @@ To use Aranet4 app with your Homey please follow these instructions:
 
 - Added Aranet2 support
 
+### v1.3.6
+
+- Added Aranet ☢ support
+
 ## Contacts
 
 If you encounter any problems with the app that cannot be solved with the FAQ provided please contact us via e-mail at:

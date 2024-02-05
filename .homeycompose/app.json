@@ -1,6 +1,6 @@
 {
   "id": "com.aranet4",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#48cccf",
@@ -8,7 +8,10 @@
     "en": "Aranet"
   },
   "aranet4homey_data": {
-    "data_service_uuid": ["f0cd140095da4f4b9ac8aa55d312af0c", "0000fce000001000800000805f9b34fb"],
+    "data_service_uuid": [
+      "f0cd140095da4f4b9ac8aa55d312af0c",
+      "0000fce000001000800000805f9b34fb"
+    ],
     "data_characteristic_uuid": "f0cd300195da4f4b9ac8aa55d312af0c",
     "max_retries": "10",
     "battery_alarm_trigger": "15",
@@ -36,8 +39,12 @@
       "air"
     ]
   },
-  "category": ["climate"],
-  "permissions": ["homey:wireless:ble"],
+  "category": [
+    "climate"
+  ],
+  "permissions": [
+    "homey:wireless:ble"
+  ],
   "images": {
     "large": "/assets/images/large.png",
     "small": "/assets/images/small.png"
